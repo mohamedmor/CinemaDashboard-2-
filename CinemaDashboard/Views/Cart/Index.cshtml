@@ -1,0 +1,72 @@
+@model List<CinemaDashboard.Models.Cart.CartItem>
+@{
+    ViewData["Title"] = "Your Cart";
+}
+
+<h2 class="mb-4">Your Cart</h2>
+
+@if (!Model.Any())
+{
+    <p class="text-muted">Your cart is empty.</p>
+    <a class="btn btn-primary" asp-controller="Home" asp-action="Index">Browse Movies</a>
+}
+else
+{
+    <table class="table align-middle">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Movie</th>
+                <th>Unit Price</th>
+                <th style="width: 140px;">Quantity</th>
+                <th>Line Total</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @if (!string.IsNullOrEmpty(item.MainImg))
+                        {
+                            <img src="~/uploads/movies/@item.MainImg" class="cart-thumb" />
+                        }
+                    </td>
+                    <td>@item.MovieName</td>
+                    <td>@item.UnitPrice.ToString("C")</td>
+                    <td>
+                        <form asp-action="UpdateQuantity" method="post" class="d-flex gap-1">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="movieId" value="@item.MovieId" />
+                            <input type="number" name="quantity" value="@item.Quantity" min="1" class="form-control form-control-sm" style="width: 70px;" />
+                            <button type="submit" class="btn btn-outline-secondary btn-sm">Update</button>
+                        </form>
+                    </td>
+                    <td>@item.LineTotal.ToString("C")</td>
+                    <td>
+                        <form asp-action="Remove" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="movieId" value="@item.MovieId" />
+                            <button type="submit" class="btn btn-outline-danger btn-sm">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-between align-items-center">
+        <form asp-action="Clear" method="post">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-outline-secondary">Clear Cart</button>
+        </form>
+
+        <div class="text-end">
+            <h4>Total: @ViewBag.Total.ToString("C")</h4>
+            <a class="btn btn-success btn-lg" asp-controller="Checkout" asp-action="Index">
+                <i class="fa-solid fa-credit-card me-1"></i>Proceed to Checkout
+            </a>
+        </div>
+    </div>
+}

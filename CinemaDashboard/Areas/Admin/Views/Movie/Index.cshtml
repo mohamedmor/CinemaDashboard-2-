@@ -1,0 +1,55 @@
+@model IEnumerable<CinemaDashboard.Models.Movie>
+@{
+    ViewData["Title"] = "Movies";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Movies</h2>
+    <a class="btn btn-primary" asp-action="Create"><i class="fa-solid fa-plus me-1"></i>Add Movie</a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Cover</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Cinema</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th style="width: 160px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var movie in Model)
+                {
+                    <tr>
+                        <td>
+                            @if (!string.IsNullOrEmpty(movie.MainImg))
+                            {
+                                <img src="~/uploads/movies/@movie.MainImg" class="thumb" />
+                            }
+                        </td>
+                        <td>@movie.Name</td>
+                        <td>@movie.Category?.Name</td>
+                        <td>@movie.Cinema?.Name</td>
+                        <td>@movie.Price.ToString("C")</td>
+                        <td><span class="badge bg-secondary">@movie.Status</span></td>
+                        <td>@movie.DateTime.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td>
+                            <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@movie.Id">Edit</a>
+                            <form asp-action="Delete" asp-route-id="@movie.Id" method="post" class="d-inline"
+                                  onsubmit="return confirm('Delete this movie?');">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

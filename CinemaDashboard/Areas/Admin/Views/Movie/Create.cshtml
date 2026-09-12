@@ -1,0 +1,82 @@
+@model CinemaDashboard.Models.Movie
+@{
+    ViewData["Title"] = "Add Movie";
+    var actors = (List<CinemaDashboard.Models.Actor>)ViewBag.Actors;
+    var selectedActorIds = (List<int>)ViewBag.SelectedActorIds;
+}
+
+<h2 class="mb-3">Add Movie</h2>
+
+<div class="card" style="max-width: 800px;">
+    <div class="card-body">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label">Name</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label">Description</label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Price" class="form-label">Price</label>
+                    <input asp-for="Price" class="form-control" />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Status" class="form-label">Status</label>
+                    <select asp-for="Status" asp-items="ViewBag.StatusList" class="form-select"></select>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="DateTime" class="form-label">Date &amp; Time</label>
+                    <input asp-for="DateTime" type="datetime-local" class="form-control" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="CategoryId" class="form-label">Category</label>
+                    <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-select">
+                        <option value="">-- Select Category --</option>
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="CinemaId" class="form-label">Cinema</label>
+                    <select asp-for="CinemaId" asp-items="ViewBag.Cinemas" class="form-select">
+                        <option value="">-- Select Cinema --</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Actors</label>
+                <select name="SelectedActorIds" class="form-select" multiple size="6">
+                    @foreach (var actor in actors)
+                    {
+                        <option value="@actor.Id" selected="@(selectedActorIds.Contains(actor.Id))">@actor.Name</option>
+                    }
+                </select>
+                <small class="text-muted">Hold Ctrl (or Cmd) to select multiple actors.</small>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Main Image</label>
+                <input type="file" name="MainImgFile" class="form-control" accept="image/*" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Sub Images (gallery)</label>
+                <input type="file" name="SubImageFiles" class="form-control" accept="image/*" multiple />
+            </div>
+
+            <button type="submit" class="btn btn-success">Save</button>
+            <a class="btn btn-secondary" asp-action="Index">Back</a>
+        </form>
+    </div>
+</div>

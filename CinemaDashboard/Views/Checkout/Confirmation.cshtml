@@ -1,0 +1,31 @@
+@model CinemaDashboard.Models.Order
+@{
+    ViewData["Title"] = "Order Confirmed";
+}
+
+<div class="text-center mb-4">
+    <i class="fa-solid fa-circle-check fa-3x text-success mb-3"></i>
+    <h2>Thank you, @Model.CustomerName!</h2>
+    <p class="text-muted">Your order #@Model.Id has been placed successfully.</p>
+</div>
+
+<div class="card mx-auto" style="max-width: 600px;">
+    <div class="card-header">Order #@Model.Id</div>
+    <ul class="list-group list-group-flush">
+        @foreach (var item in Model.Items)
+        {
+            <li class="list-group-item d-flex justify-content-between">
+                <span>@item.MovieName × @item.Quantity</span>
+                <span>@((item.UnitPrice * item.Quantity).ToString("C"))</span>
+            </li>
+        }
+    </ul>
+    <div class="card-footer d-flex justify-content-between">
+        <strong>Total</strong>
+        <strong>@Model.TotalPrice.ToString("C")</strong>
+    </div>
+</div>
+
+<div class="text-center mt-4">
+    <a class="btn btn-primary" asp-controller="Home" asp-action="Index">Continue Browsing</a>
+</div>

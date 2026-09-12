@@ -1,0 +1,61 @@
+@model CinemaDashboard.Models.Cart.CheckoutViewModel
+@{
+    ViewData["Title"] = "Checkout";
+    var cart = (List<CinemaDashboard.Models.Cart.CartItem>)ViewBag.Cart;
+}
+
+<h2 class="mb-4">Checkout</h2>
+
+<div class="row">
+    <div class="col-md-7">
+        <div class="card mb-4">
+            <div class="card-header">Your Details</div>
+            <div class="card-body">
+                <form asp-action="PlaceOrder" method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="CustomerName" class="form-label">Full Name</label>
+                        <input asp-for="CustomerName" class="form-control" />
+                        <span asp-validation-for="CustomerName" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label">Email</label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Phone" class="form-label">Phone</label>
+                        <input asp-for="Phone" class="form-control" />
+                    </div>
+
+                    <button type="submit" class="btn btn-success btn-lg w-100">
+                        <i class="fa-solid fa-check me-1"></i>Place Order
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-5">
+        <div class="card">
+            <div class="card-header">Order Summary</div>
+            <ul class="list-group list-group-flush">
+                @foreach (var item in cart)
+                {
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>@item.MovieName × @item.Quantity</span>
+                        <span>@item.LineTotal.ToString("C")</span>
+                    </li>
+                }
+            </ul>
+            <div class="card-footer d-flex justify-content-between">
+                <strong>Total</strong>
+                <strong>@ViewBag.Total.ToString("C")</strong>
+            </div>
+        </div>
+    </div>
+</div>

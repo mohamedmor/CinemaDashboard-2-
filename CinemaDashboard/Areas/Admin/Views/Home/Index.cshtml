@@ -1,0 +1,77 @@
+@model IEnumerable<CinemaDashboard.Models.Movie>
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h2 class="mb-4">Dashboard</h2>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card card-stat bg-primary">
+            <div class="card-body">
+                <div class="small">Movies</div>
+                <div class="fs-3 fw-bold">@ViewBag.MoviesCount</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card card-stat bg-warning">
+            <div class="card-body">
+                <div class="small">Cinemas</div>
+                <div class="fs-3 fw-bold">@ViewBag.CinemasCount</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card card-stat bg-success">
+            <div class="card-body">
+                <div class="small">Actors</div>
+                <div class="fs-3 fw-bold">@ViewBag.ActorsCount</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card card-stat bg-danger">
+            <div class="card-body">
+                <div class="small">Categories</div>
+                <div class="fs-3 fw-bold">@ViewBag.CategoriesCount</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">Latest Movies</div>
+    <div class="card-body">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Cover</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Cinema</th>
+                    <th>Status</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var movie in Model)
+                {
+                    <tr>
+                        <td>
+                            @if (!string.IsNullOrEmpty(movie.MainImg))
+                            {
+                                <img src="~/uploads/movies/@movie.MainImg" class="thumb" />
+                            }
+                        </td>
+                        <td>@movie.Name</td>
+                        <td>@movie.Category?.Name</td>
+                        <td>@movie.Cinema?.Name</td>
+                        <td><span class="badge bg-secondary">@movie.Status</span></td>
+                        <td>@movie.Price.ToString("C")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

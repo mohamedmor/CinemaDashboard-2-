@@ -1,0 +1,45 @@
+@model IEnumerable<CinemaDashboard.Models.Actor>
+@{
+    ViewData["Title"] = "Actors";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Actors</h2>
+    <a class="btn btn-primary" asp-action="Create"><i class="fa-solid fa-plus me-1"></i>Add Actor</a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th style="width: 160px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var actor in Model)
+                {
+                    <tr>
+                        <td>
+                            @if (!string.IsNullOrEmpty(actor.Img))
+                            {
+                                <img src="~/uploads/actors/@actor.Img" class="thumb" />
+                            }
+                        </td>
+                        <td>@actor.Name</td>
+                        <td>
+                            <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@actor.Id">Edit</a>
+                            <form asp-action="Delete" asp-route-id="@actor.Id" method="post" class="d-inline"
+                                  onsubmit="return confirm('Delete this actor?');">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

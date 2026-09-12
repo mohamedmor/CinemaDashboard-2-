@@ -1,0 +1,97 @@
+@model CinemaDashboard.Models.Movie
+@{
+    ViewData["Title"] = "Edit Movie";
+    var actors = (List<CinemaDashboard.Models.Actor>)ViewBag.Actors;
+    var selectedActorIds = (List<int>)ViewBag.SelectedActorIds;
+}
+
+<h2 class="mb-3">Edit Movie</h2>
+
+<div class="card" style="max-width: 800px;">
+    <div class="card-body">
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Id" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label">Name</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label">Description</label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Price" class="form-label">Price</label>
+                    <input asp-for="Price" class="form-control" />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Status" class="form-label">Status</label>
+                    <select asp-for="Status" asp-items="ViewBag.StatusList" class="form-select"></select>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="DateTime" class="form-label">Date &amp; Time</label>
+                    <input asp-for="DateTime" type="datetime-local" class="form-control" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="CategoryId" class="form-label">Category</label>
+                    <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-select"></select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="CinemaId" class="form-label">Cinema</label>
+                    <select asp-for="CinemaId" asp-items="ViewBag.Cinemas" class="form-select"></select>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Actors</label>
+                <select name="SelectedActorIds" class="form-select" multiple size="6">
+                    @foreach (var actor in actors)
+                    {
+                        <option value="@actor.Id" selected="@(selectedActorIds.Contains(actor.Id))">@actor.Name</option>
+                    }
+                </select>
+                <small class="text-muted">Hold Ctrl (or Cmd) to select multiple actors.</small>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Main Image</label>
+                @if (!string.IsNullOrEmpty(Model.MainImg))
+                {
+                    <div class="mb-2"><img src="~/uploads/movies/@Model.MainImg" class="thumb" /></div>
+                }
+                <input type="file" name="MainImgFile" class="form-control" accept="image/*" />
+                <small class="text-muted">Leave empty to keep the current main image.</small>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Current Sub Images</label>
+                <div class="d-flex flex-wrap gap-2 mb-2">
+                    @foreach (var img in Model.SubImages)
+                    {
+                        <div class="text-center">
+                            <img src="~/uploads/movies/@img.ImagePath" class="thumb d-block mb-1" />
+                            <button type="submit" form="delete-sub-@img.Id" class="btn btn-outline-danger btn-sm">Remove</button>
+                        </div>
+                        <form id="delete-sub-@img.Id" asp-action="DeleteSubImage" asp-route-id="@img.Id" asp-route-movieId="@Model.Id" method="post">
+                            @Html.AntiForgeryToken()
+                        </form>
+                    }
+                </div>
+                <label class="form-label">Add More Sub Images</label>
+                <input type="file" name="SubImageFiles" class="form-control" accept="image/*" multiple />
+            </div>
+
+            <button type="submit" class="btn btn-success">Save</button>
+            <a class="btn btn-secondary" asp-action="Index">Back</a>
+        </form>
+    </div>
+</div>

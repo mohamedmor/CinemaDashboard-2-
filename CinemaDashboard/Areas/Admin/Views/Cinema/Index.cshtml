@@ -1,0 +1,47 @@
+@model IEnumerable<CinemaDashboard.Models.Cinema>
+@{
+    ViewData["Title"] = "Cinemas";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Cinemas</h2>
+    <a class="btn btn-primary" asp-action="Create"><i class="fa-solid fa-plus me-1"></i>Add Cinema</a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th style="width: 160px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var cinema in Model)
+                {
+                    <tr>
+                        <td>
+                            @if (!string.IsNullOrEmpty(cinema.Img))
+                            {
+                                <img src="~/uploads/cinemas/@cinema.Img" class="thumb" />
+                            }
+                        </td>
+                        <td>@cinema.Name</td>
+                        <td>@cinema.Address</td>
+                        <td>
+                            <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@cinema.Id">Edit</a>
+                            <form asp-action="Delete" asp-route-id="@cinema.Id" method="post" class="d-inline"
+                                  onsubmit="return confirm('Delete this cinema?');">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
